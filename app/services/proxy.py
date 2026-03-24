@@ -24,7 +24,8 @@ async def forward_request(service_name: str, path: str, request: Request) -> Res
         verify_gateway_token(clean_token)
         headers["Authorization"] = f"Bearer {clean_token}"
 
-    async with httpx.AsyncClient() as client:
+    timeout = httpx.Timeout(120.0) 
+    async with httpx.AsyncClient(timeout=timeout) as client:
         try:
             proxy_req = client.build_request(
                 method=request.method, url=target_url, headers=headers,
